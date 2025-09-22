@@ -157,18 +157,12 @@ contract EasySwapOrderBook is
                 卖单（Ask）通常不需要预先支付 ETH，因此不计算buyPrice。
              */
             if (newOrders[i].side == LibOrder.Side.Bid) {
-                buyPrice =
-                    Price.unwrap(newOrders[i].price) *
-                    newOrders[i].nft.amount;
+                buyPrice = Price.unwrap(newOrders[i].price) * newOrders[i].nft.amount;
             }
             //调用内部函数_makeOrderTry尝试创建订单，返回OrderKey（订单唯一标识）
             OrderKey newOrderKey = _makeOrderTry(newOrders[i], buyPrice);
             newOrderKeys[i] = newOrderKey;
-            if (
-                // if the order is not created successfully, the eth will be returned
-                OrderKey.unwrap(newOrderKey) !=
-                OrderKey.unwrap(LibOrder.ORDERKEY_SENTINEL)
-            ) {
+            if (OrderKey.unwrap(newOrderKey) !=OrderKey.unwrap(LibOrder.ORDERKEY_SENTINEL)) {
                 //订单创建成功
                 ETHAmount += buyPrice;
             }
